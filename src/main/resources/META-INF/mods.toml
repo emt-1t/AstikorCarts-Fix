@@ -1,0 +1,17 @@
+modLoader="javafml"
+loaderVersion="[47,)"
+issueTrackerURL="https://github.com/MennoMax/astikor-carts/issues"
+license="MIT"
+[[mods]]
+modId="astikorcarts"
+version="${file.jarVersion}"
+displayName="AstikorCarts Fix"
+displayURL="https://center.mcmod.cn/917050/#/home/"
+# A file name (in the root of the mod JAR) containing a logo for display
+logoFile="logo.png"
+authors="shiroha"
+description="AstikorCarts Fix - 修复版本，添加了马车滚动声音系统和各种bug修复。\n基于原版AstikorCarts，为马车添加了缺失的声音效果。\n\n使用方法：用动物拖拽马车时会自动播放滚动声音。"
+mandatory=true
+versionRange="[1.20)"
+ordering="NONE"
+side="BOTH"

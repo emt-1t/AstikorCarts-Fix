@@ -1,0 +1,163 @@
+plugins {
+    id 'eclipse'
+    id 'maven-publish'
+    id 'net.minecraftforge.gradle' version '5.1.+'
+}
+
+// 配置所有仓库使用腾讯镜像源
+allprojects {
+    repositories {
+        // 腾讯云Maven镜像
+        maven { url 'https://mirrors.cloud.tencent.com/nexus/repository/maven-public/' }
+        // 阿里云Maven镜像作为备用
+        maven { url 'https://maven.aliyun.com/repository/public/' }
+        // 原始仓库作为最后备用
+        mavenCentral()
+        maven { url = 'https://maven.minecraftforge.net' }
+    }
+}
+
+version = '1.0.0'
+group = 'com.shiroha' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = 'astikorcarts-fix-1.20.x'
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+minecraft {
+    mappings channel: 'official', version: '1.20.1'
+    runs {
+        client {
+            workingDirectory project.file('run')
+
+            // Recommended logging data for a userdev environment
+            property 'forge.logging.markers', 'REGISTRIES'
+
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                astikorcarts {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        server {
+            workingDirectory project.file('run')
+
+            // Recommended logging data for a userdev environment
+            property 'forge.logging.markers', 'REGISTRIES'
+
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                astikorcarts {
+                    source sourceSets.main
+                }
+            }
+        }
+        gameTestServer {
+            workingDirectory project.file('run')
+
+            // Recommended logging data for a userdev environment
+            property 'forge.logging.markers', 'REGISTRIES'
+            
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+
+            property 'forge.enabledGameTestNamespaces', 'astikorcarts'
+
+            mods {
+                astikorcarts {
+                    source sourceSets.main
+                }
+            }
+        }
+        data {
+            workingDirectory project.file('run')
+
+            // Recommended logging data for a userdev environment
+            property 'forge.logging.markers', 'REGISTRIES'
+
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+
+            args '--mod', 'astikorcarts', '--all', '--output', file('src/generated/resources/')
+
+            mods {
+                astikorcarts {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
+}
+
+sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+dependencies {
+    // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
+    // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
+    // The userdev artifact is a special name and will get all sorts of transformations applied to it.
+    minecraft 'net.minecraftforge:forge:1.20.1-47.2.0'
+
+    // You may put jars on which you depend on in ./libs or you may define them like so..
+    // compile "some.group:artifact:version:classifier"
+    // compile "some.group:artifact:version"
+
+    // Real examples
+    // compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
+    // compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
+
+    // The 'provided' configuration is for optional dependencies that exist at compile-time but might not at runtime.
+    // provided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
+
+    // These dependencies get remapped to your current MCP mappings
+    // deobf 'com.mod-buildcraft:buildcraft:6.0.8:dev'
+
+    // For more info...
+    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
+    // http://www.gradle.org/docs/current/userguide/dependency_management.html
+
+}
+
+jar {
+    manifest {
+        attributes([
+            "Specification-Title": "AstikorCarts",
+            "Specification-Vendor": "AstikorCarts",
+            "Specification-Version": "1",
+            "Implementation-Title": "AstikorCarts",
+            "Implementation-Version": version,
+            "Implementation-Vendor": "AstikorCarts",
+            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+}
+
+jar.finalizedBy('reobfJar')
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+/*
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifactId project.archivesBaseName
+        }
+    }
+    repositories {
+        maven {
+            url "sftp://mvn.mennomax.de:22/var/www/mvn.mennomax.de"
+            credentials {
+                username "$mavenUser"
+                password "$mavenPassword"
+            }
+        }
+    }
+}
+*/
